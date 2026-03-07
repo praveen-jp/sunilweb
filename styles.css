@@ -293,7 +293,7 @@
     /* ============================================================
        GALLERY
     ============================================================ */
-    #gallery { background: var(--bg); }
+    /* #gallery { background: var(--bg); }
     .gallery-header { margin-bottom: 48px; }
     .gallery-grid {
       display: grid; grid-template-columns: repeat(3,1fr); gap: 16px;
@@ -323,8 +323,118 @@
     }
     .gallery-item:hover .gallery-overlay { opacity: 1; }
     .gallery-item:hover .gallery-placeholder { transform: scale(1.04); }
-    .overlay-text { font-family: var(--font-display); font-size: 1rem; font-weight: 700; color: #fff; text-align: center; }
+    .overlay-text { font-family: var(--font-display); font-size: 1rem; font-weight: 700; color: #fff; text-align: center; } */
 
+#gallery { background: var(--bg); }
+
+.gallery-header { margin-bottom: 48px; }
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 16px;
+}
+
+.gallery-item {
+  border-radius: var(--radius);
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+}
+
+.gallery-item:nth-child(1) { grid-column: span 2; }
+.gallery-item:nth-child(4) { grid-column: span 2; }
+
+.gallery-placeholder {
+  width: 100%;
+  aspect-ratio: 16/10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 12px;
+  color: var(--muted);
+
+  /* IMPORTANT FOR IMAGES */
+  background-size: cover;
+  background-position: center;
+
+  transition: all 0.45s;
+  position: relative;
+  overflow: hidden;
+}
+
+.gallery-item:nth-child(1) .gallery-placeholder,
+.gallery-item:nth-child(4) .gallery-placeholder {
+  aspect-ratio: 21/9;
+}
+
+/* DARK GRADIENT OVER IMAGE */
+.gallery-placeholder::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(5,13,26,0.55),
+    rgba(5,13,26,0.25) 40%,
+    transparent 70%
+  );
+  z-index: 1;
+}
+
+.gallery-icon {
+  font-size: 2.4rem;
+  opacity: 0.6;
+  position: relative;
+  z-index: 2;
+  color: var(--sky);
+}
+
+.gallery-label {
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.9;
+  position: relative;
+  z-index: 2;
+  color: #fff;
+}
+
+/* HOVER OVERLAY */
+.gallery-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(37,99,235,0.9),
+    rgba(56,189,248,0.85)
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.4s;
+  z-index: 3;
+}
+
+.gallery-item:hover .gallery-overlay {
+  opacity: 1;
+}
+
+.gallery-item:hover .gallery-placeholder {
+  transform: scale(1.04);
+}
+
+.overlay-text {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+  text-align: center;
+}
     /* ============================================================
        WHY CHOOSE US — Balanced two-col layout
     ============================================================ */
@@ -689,3 +799,4 @@
 
     /* Submit btn loading state */
     .submit-btn:disabled { opacity: 0.75; cursor: not-allowed; }
+
