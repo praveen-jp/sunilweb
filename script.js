@@ -1,271 +1,138 @@
 "use strict";
 
-/* ================================
-   WAIT FOR FULL PAGE LOAD
-================================ */
-window.addEventListener("load", () => {
+const BUSINESS_PHONE = "+919949894891";
+const BUSINESS_WHATSAPP = "919949894891";
 
-if(typeof gsap === "undefined"){
-console.warn("GSAP not loaded");
-return;
+function escapeHtml(value = "") {
+  return String(value).replace(/[&<>"']/g, (char) => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  })[char]);
 }
 
-gsap.registerPlugin(ScrollTrigger);
-
-/* ================================
-   SAFE SELECTORS
-================================ */
-const $ = (s)=>document.querySelector(s);
-const $$ = (s)=>document.querySelectorAll(s);
-
-/* ================================
-   NAVBAR SCROLL EFFECT
-================================ */
-const navbar = $("#navbar");
-const backTop = $("#backTop");
-
-window.addEventListener("scroll", () => {
-
-const y = window.scrollY;
-
-navbar?.classList.toggle("scrolled", y>60);
-backTop?.classList.toggle("visible", y>400);
-
-},{passive:true});
-
-/* ================================
-   MOBILE MENU
-================================ */
-const hamburger=$("#hamburger");
-const mobileMenu=$("#mobileMenu");
-const mobileOverlay=$("#mobileOverlay");
-const menuClose=$("#menuClose");
-
-function openMenu(){
-mobileMenu?.classList.add("open");
-mobileOverlay?.classList.add("open");
-document.body.style.overflow="hidden";
+function slugify(value = "") {
+  return String(value).toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 }
 
-function closeMenu(){
-mobileMenu?.classList.remove("open");
-mobileOverlay?.classList.remove("open");
-document.body.style.overflow="";
+function buildProductCard(product, index) {
+  const name = escapeHtml(product.name || "Product");
+  const description = escapeHtml(product.description || "Contact us to discuss your requirement.");
+  const image = product.image_url ? escapeHtml(product.image_url) : "";
+  const alt = escapeHtml(product.alt_text || product.name || "Product photograph");
+  const categoryName = escapeHtml(product.categories?.name || product.category_name || "CUSTOM WORKS");
+  const categorySlug = escapeHtml(product.categories?.slug || product.category_slug || "custom");
+  const message = encodeURIComponent("Hello, I would like to enquire about " + (product.name || "your products") + ".");
+  const imageMarkup = image
+    ? `<a class="product-image" href="${image}" target="_blank" rel="noopener"><img src="${image}" alt="${alt}" loading="lazy"></a>`
+    : '<div class="product-image image-placeholder" role="img" aria-label="Photograph to be added"><span>PRODUCT<br>PHOTOGRAPH</span></div>';
+
+  return `<article class="product-card" data-category="${categorySlug}">
+    ${imageMarkup}
+    <div class="product-meta"><span>${String(index + 1).padStart(2, "0")} / ${categoryName.toUpperCase()}</span><span>MADE TO ORDER</span></div>
+    <h3>${name}</h3><p>${description}</p>
+    <a class="product-contact" href="https://wa.me/${BUSINESS_WHATSAPP}?text=${message}" target="_blank" rel="noopener">Enquire about this <span>↗</span></a>
+  </article>`;
 }
 
-hamburger?.addEventListener("click",openMenu);
-menuClose?.addEventListener("click",closeMenu);
-mobileOverlay?.addEventListener("click",closeMenu);
-
-$$(".mobile-link").forEach(l=>{
-l.addEventListener("click",closeMenu);
-});
-
-/* ================================
-   HERO ENTRANCE
-================================ */
-gsap.timeline({delay:0.3})
-.from(".hero-badge",{y:30,opacity:0,duration:0.6})
-.from("#heroContent h1",{y:40,opacity:0,duration:0.8},"-=0.3")
-.from(".hero-sub",{y:30,opacity:0,duration:0.6},"-=0.4")
-.from(".hero-btns",{y:20,opacity:0,duration:0.5},"-=0.4")
-.from(".hero-stats .stat-item",{y:20,opacity:0,stagger:0.12,duration:0.5},"-=0.3");
-
-/* ================================
-   COUNTERS
-================================ */
-function runCounter(el){
-
-const target = parseInt(el.dataset.target);
-const suffix = el.dataset.suffix || "";
-
-let start = null;
-
-function animate(timestamp){
-
-if(!start) start = timestamp;
-
-const progress = Math.min((timestamp - start) / 1500, 1);
-const ease = 1 - Math.pow(1 - progress, 3);
-
-const value = Math.floor(ease * target);
-
-el.textContent = value + suffix;
-
-if(progress < 1){
-requestAnimationFrame(animate);
-}else{
-el.textContent = target + suffix;
+function setupNavigation() {
+  const toggle = document.querySelector(".menu-toggle");
+  const nav = document.querySelector(".site-nav");
+  if (!toggle || !nav) return;
+  toggle.addEventListener("click", () => {
+    const expanded = toggle.getAttribute("aria-expanded") === "true";
+    toggle.setAttribute("aria-expanded", String(!expanded));
+    nav.classList.toggle("open", !expanded);
+  });
+  nav.querySelectorAll("a").forEach((link) => link.addEventListener("click", () => {
+    nav.classList.remove("open");
+    toggle.setAttribute("aria-expanded", "false");
+  }));
 }
 
+function setupFilters() {
+  const container = document.getElementById("category-filters");
+  if (!container) return;
+  container.addEventListener("click", (event) => {
+    const button = event.target.closest("button[data-category]");
+    if (!button) return;
+    const category = button.dataset.category;
+    container.querySelectorAll("button").forEach((item) => {
+      const active = item === button;
+      item.classList.toggle("active", active);
+      item.setAttribute("aria-pressed", String(active));
+    });
+    document.querySelectorAll("#product-grid .product-card").forEach((card) => {
+      card.hidden = category !== "all" && card.dataset.category !== category;
+    });
+  });
 }
 
-requestAnimationFrame(animate);
-
+function supabaseClient() {
+  const config = window.SUNIL_SUPABASE_CONFIG;
+  if (!config || !config.url || !config.anonKey || config.url.includes("YOUR_PROJECT") || config.anonKey.includes("YOUR_")) return null;
+  if (!window.supabase?.createClient) return null;
+  return window.supabase.createClient(config.url, config.anonKey);
 }
 
-const counters=$$(".counter");
-
-const counterObserver=new IntersectionObserver(entries=>{
-
-entries.forEach(entry=>{
-if(entry.isIntersecting){
-runCounter(entry.target);
-counterObserver.unobserve(entry.target);
-}
-});
-
-},{threshold:0.4});
-
-counters.forEach(c=>counterObserver.observe(c));
-
-/* ================================
-   SCROLL ANIMATIONS
-================================ */
-
-function animate(selector,config){
-
-if(!document.querySelector(selector)) return;
-
-gsap.from(selector,{
-...config,
-scrollTrigger:{
-trigger:config.trigger || selector,
-start:"top 85%",
-invalidateOnRefresh:true
-}
-});
-
+async function loadCatalogue(client) {
+  const grid = document.getElementById("product-grid");
+  const filters = document.getElementById("category-filters");
+  if (!client || !grid) return;
+  const { data, error } = await client.from("products")
+    .select("id,name,description,image_url,alt_text,display_order,categories(name,slug)")
+    .eq("is_active", true)
+    .order("display_order", { ascending: true })
+    .order("created_at", { ascending: false });
+  if (error) {
+    console.warn("Product catalogue could not be loaded; showing starter catalogue.", error.message);
+    return;
+  }
+  if (!Array.isArray(data)) return;
+  if (!data.length) {
+    grid.innerHTML = '<p class="catalogue-empty">Our catalogue is being updated. Please contact us for current product information.</p>';
+    return;
+  }
+  grid.innerHTML = data.map(buildProductCard).join("");
+  if (filters) {
+    const categories = [...new Map(data.filter((item) => item.categories?.slug).map((item) => [item.categories.slug, item.categories])).values()];
+    filters.innerHTML = '<button class="filter-button active" type="button" data-category="all" aria-pressed="true">All products</button>' +
+      categories.map((category) => `<button class="filter-button" type="button" data-category="${escapeHtml(category.slug)}" aria-pressed="false">${escapeHtml(category.name)}</button>`).join("");
+  }
 }
 
-/* ABOUT */
-animate("#aboutImg",{x:-60,opacity:0,duration:0.8});
-animate("#aboutText",{x:60,opacity:0,duration:0.8});
-animate(".about-feat",{y:20,opacity:0,stagger:0.1});
-
-/* SERVICES */
-animate(".service-card",{y:40,opacity:0,stagger:0.08});
-
-/* PROCESS */
-animate(".process-step",{y:30,opacity:0,stagger:0.12});
-
-/* GALLERY */
-animate(".gallery-item",{scale:0.95,opacity:0,stagger:0.07});
-
-/* WHY */
-animate(".why-item",{x:-40,opacity:0,stagger:0.12});
-animate(".why-card",{scale:0.9,opacity:0,stagger:0.1});
-
-/* TESTIMONIALS */
-animate(".testimonial-card",{y:40,opacity:0,stagger:0.1});
-
-/* CONTACT */
-animate("#contactInfo .contact-card",{x:-30,opacity:0,stagger:0.08});
-animate("#contactForm",{x:40,opacity:0,duration:0.8});
-
-/* ================================
-   HERO PARALLAX
-================================ */
-
-const heroGrid=$(".hero-grid");
-const orb1=$(".hero-orb");
-const orb2=$(".hero-orb2");
-
-let ticking=false;
-
-function updateParallax(){
-
-let y=window.scrollY;
-
-if(heroGrid) heroGrid.style.transform=`translateY(${y*0.3}px)`;
-if(orb1) orb1.style.transform=`translateY(${y*0.15}px)`;
-if(orb2) orb2.style.transform=`translateY(${y*0.1}px)`;
-
-ticking=false;
-
+function renderGoogleReviews(reviews) {
+  const target = document.getElementById("google-reviews");
+  if (!target || !Array.isArray(reviews) || !reviews.length) return;
+  target.innerHTML = '<div class="review-list">' + reviews.map((review) => {
+    const rating = Math.max(0, Math.min(5, Number(review.rating) || 0));
+    const stars = "★".repeat(Math.round(rating)) + "☆".repeat(5 - Math.round(rating));
+    const author = escapeHtml(review.authorAttribution?.displayName || review.author_name || "Google reviewer");
+    const text = escapeHtml(review.text?.text || review.text || "");
+    const time = escapeHtml(review.relativePublishTimeDescription || "");
+    const authorUri = review.authorAttribution?.uri;
+    const authorLabel = authorUri
+      ? `<a class="review-author" href="${escapeHtml(authorUri)}" target="_blank" rel="noopener">${author}</a>`
+      : `<span class="review-author">${author}</span>`;
+    return `<article class="review-item"><div class="review-top">${authorLabel}<span class="review-stars" aria-label="${rating} out of 5 stars">${stars}</span></div><div class="review-time">${time}</div><p class="review-text">${text || "This customer left a Google rating."}</p></article>`;
+  }).join("") + "</div>";
 }
 
-window.addEventListener("scroll",()=>{
-
-if(!ticking){
-requestAnimationFrame(updateParallax);
-ticking=true;
+async function loadGoogleReviews(client) {
+  if (!client) return;
+  const target = document.getElementById("google-reviews");
+  try {
+    const { data, error } = await client.functions.invoke("google-reviews");
+    if (error) throw error;
+    if (data?.reviews?.length) renderGoogleReviews(data.reviews);
+    else if (target && data?.message) target.innerHTML = '<p class="review-placeholder">' + escapeHtml(data.message) + '</p>';
+  } catch (error) {
+    console.info("Google reviews are not configured yet. The live Google profile link remains available.", error?.message || error);
+  }
 }
 
-},{passive:true});
-
-/* ================================
-   CONTACT FORM VALIDATION
-================================ */
-
-const form=$("#contactForm");
-const submit=$("#submitBtn");
-const success=$("#formSuccess");
-
-if(form){
-
-const rules={
-"name":v=>/^[a-zA-Z\s]{3,80}$/.test(v),
-"phone":v=>/^[6-9][0-9]{9}$/.test(v),
-"email":v=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v),
-"service":v=>v!=="",
-"message":v=>v.length>=10
-};
-
-form.addEventListener("submit",e=>{
-
-e.preventDefault();
-
-let valid=true;
-
-Object.keys(rules).forEach(name=>{
-
-const field=form.querySelector(`[name="${name}"]`);
-const val=field.value.trim();
-
-if(!rules[name](val)){
-field.classList.add("invalid");
-valid=false;
-}else{
-field.classList.remove("invalid");
-field.classList.add("valid");
-}
-
-});
-
-if(!valid){
-submit.classList.add("shake");
-setTimeout(()=>submit.classList.remove("shake"),400);
-return;
-}
-
-submit.disabled=true;
-submit.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Sending...';
-
-setTimeout(()=>{
-
-form.reset();
-submit.disabled=false;
-submit.innerHTML='<i class="fa-solid fa-paper-plane"></i> Send Enquiry';
-
-success?.classList.add("visible");
-
-setTimeout(()=>{
-success?.classList.remove("visible");
-},5000);
-
-},1500);
-
-});
-
-}
-
-/* ================================
-   FINAL SCROLLTRIGGER FIX
-================================ */
-
-setTimeout(()=>{
-ScrollTrigger.refresh();
-},600);
-
+document.addEventListener("DOMContentLoaded", async () => {
+  document.getElementById("year")?.replaceChildren(String(new Date().getFullYear()));
+  setupNavigation();
+  setupFilters();
+  const client = supabaseClient();
+  await Promise.all([loadCatalogue(client), loadGoogleReviews(client)]);
 });
