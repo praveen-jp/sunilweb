@@ -17,7 +17,7 @@ serve(async (request: Request) => {
   if (!apiKey || !placeId) {
     return new Response(JSON.stringify({
       reviews: [],
-      message: "Google reviews will appear here once the Google Business Profile integration is configured."
+      message: "Reviews connection pending. Please use the Google link to read the latest customer reviews."
     }), {
       status: 200,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
