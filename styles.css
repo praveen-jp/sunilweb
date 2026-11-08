@@ -104,3 +104,21 @@ body{font-size:16px;line-height:1.7}
   .google-footer{font-size:11px}
   .eyebrow,.section-kicker,.contact-label{font-size:10px}
 }
+
+/* Supplied S brand artwork and genuine social marks */
+.brand-mark{overflow:hidden;border-radius:2px}
+.brand-mark img{width:29px;height:29px;object-fit:contain}
+.footer-brand .brand-mark{background:var(--ink);color:#fff}
+.footer-brand .brand-mark img{width:29px;height:29px}
+.footer-socials{display:flex;align-items:center;gap:9px}
+.social-icon{width:35px;height:35px;display:grid;place-items:center;border:1px solid #ffffff42;border-radius:50%;color:#fff;opacity:.96}
+.social-icon svg{width:17px;height:17px;display:block}
+.social-icon.instagram{color:#e9a0b6}
+.social-icon.facebook{color:#8ab7ff}
+.social-icon.youtube{color:#ff7777}
+.social-icon.whatsapp{color:#6fe0a0;transition:transform .2s,background .2s}
+.social-icon.whatsapp:hover{transform:translateY(-2px);background:#ffffff16}
+.floating-whatsapp{font-size:0}
+.floating-whatsapp svg{width:27px;height:27px;display:block}
+@media(max-width:900px){.footer-main{grid-template-columns:1fr 1fr}.footer-socials{grid-column:1/-1}}
+@media(max-width:680px){.brand-mark img,.footer-brand .brand-mark img{width:26px;height:26px}.footer-socials{grid-column:auto}.floating-whatsapp{width:54px;height:54px}}
