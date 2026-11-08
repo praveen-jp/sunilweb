@@ -67,7 +67,7 @@ function resetProductForm() {
   populateCategories();
 }
 async function uploadImage(file) {
-  if (!file) return currentImageUrl;
+  if (!file || !file.name) return currentImageUrl;
   if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) throw new Error("Use a JPG, PNG or WebP image.");
   if (file.size > 5 * 1024 * 1024) throw new Error("Image must be 5 MB or smaller.");
   const extension = file.name.split(".").pop().toLowerCase().replace(/[^a-z0-9]/g, "") || "jpg";
