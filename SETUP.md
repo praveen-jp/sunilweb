@@ -2,32 +2,36 @@
 
 The public website is a lightweight static site. Supabase is optional for local preview and becomes the data source for the unlimited product catalogue and the Google reviews integration after configuration.
 
-## 1. Supabase project
+## 1. Create and configure Supabase (step by step)
 
-1. Create a Supabase project.
-2. Open **SQL Editor** and run the complete contents of `supabase/schema.sql`.
-3. Open **Project Settings → API** and copy the Project URL and anon/public key.
-4. Replace the placeholders in `supabase-config.js`:
+Do this when you are ready to activate the catalogue. The website can still be previewed with the sample catalogue while Supabase is not configured.
 
-   ```js
-   window.SUNIL_SUPABASE_CONFIG = {
-     url: "https://YOUR_PROJECT_REF.supabase.co",
-     anonKey: "YOUR_SUPABASE_ANON_KEY"
-   };
-   ```
-
-   The anon key is designed for browser use. **Never put the service_role key in this file or any frontend code.** The database and Storage Row Level Security policies are the access control.
-
-5. In **Authentication → Providers**, enable Email. Keep public sign-ups disabled.
-6. In **Authentication → Users**, create the first admin user with a strong password.
-7. Copy that user's UUID and run this in the SQL Editor:
+1. Open [Supabase](https://supabase.com/) and sign in. Choose **New project**.
+2. Select the organisation, enter a project name such as `sunil-digitals`, set a strong database password and choose a region close to your users (for this business, an India region if available). Save the database password somewhere secure.
+3. Wait until the project status is ready. Open **SQL Editor → New query**.
+4. Open `supabase/schema.sql` in this repository, copy the entire file, paste it into the SQL Editor and click **Run**. Confirm the query completes successfully. This creates the catalogue tables, admin allow-list and Row Level Security policies, plus the product image Storage bucket and its policies.
+5. Open **Project Settings → API** (in some dashboard layouts this appears as **Project Settings → API Keys**). Copy:
+   - Project URL
+   - Publishable/anon key (the browser-safe public key)
+6. Open `supabase-config.js` and replace the two placeholders with those values. This file is intentionally the public browser configuration. **Never paste a secret key or the legacy `service_role` key into it, GitHub, HTML or JavaScript.** RLS is the security boundary.
+7. In **Authentication → Sign In / Providers**, enable Email/password sign-in. Keep public sign-ups disabled; admins should be created deliberately by the project owner.
+8. Open **Authentication → Users → Add user**, create the first admin using an email you control and a strong unique password. Confirm the user is created.
+9. Copy that user's UUID from the Users table. Return to **SQL Editor** and run the following, replacing the sample UUID with the real one:
 
    ```sql
    insert into public.admin_users (user_id)
    values ('PASTE-AUTH-USER-UUID-HERE');
    ```
 
-Only UUIDs explicitly added to `public.admin_users` can make catalogue changes. Create further admin users in the Auth dashboard and explicitly allow-list each UUID.
+10. Deploy the branch preview and visit `/admin.html`. Sign in with the user you just created. Test adding a draft product, uploading a small image, editing it, hiding it, publishing it and deleting a test record. Confirm the public catalogue only shows published products. Do not add real catalogue entries until the workflow is tested.
+
+If the insert reports a duplicate key, that UUID is already allow-listed. To remove an admin later, delete only that user's row from `public.admin_users`; do not delete unrelated Auth users.
+
+### 1A. Connect the website to your Supabase project
+
+The repository currently contains placeholder values in `supabase-config.js`. For this static Vercel site, update that file on the redesign branch with the Project URL and publishable/anon key from your own Supabase project, then push a commit so the Vercel preview rebuilds. The public key is expected to be visible in the browser; security must come from the schema's Row Level Security policies and the admin UUID allow-list, not from hiding the public key.
+
+After the preview works, configure the same values for the production deployment only when you later decide to launch. Never add the database password, Google API key, Supabase secret key or `service_role` key to frontend environment variables or source files.
 
 ## 2. Admin dashboard
 
@@ -46,7 +50,11 @@ Sign in with the approved Supabase Auth email and password. The admin can:
 
 There is deliberately no price field. Product pages show enquiry actions only. Product image files are stored in the public `product-images` bucket. Keep passwords private and use unique credentials.
 
-## 3. Genuine Google reviews
+## 3. Genuine Google reviews (can be connected later)
+
+You do not need access to manage the Google Business Profile just to request public Place Details. When you are able to open the correct public listing, we will need its exact Place ID. The short Google share link currently on the site is retained as the visitor link, but it is not yet confirmed as the Place ID. Do not guess the ID or connect a similarly named listing.
+
+
 
 The website does not contain fabricated testimonials. The Edge Function at `supabase/functions/google-reviews/index.ts` requests the Place Details (New) API when the homepage loads.
 
@@ -64,11 +72,13 @@ The website does not contain fabricated testimonials. The Edge Function at `supa
 
 The API key and Place ID are Edge Function secrets; they are not exposed in website JavaScript. The function returns the available review data, rating, review count and Google Maps URL. Google Places API Place Details returns a limited set (up to five) of reviews in relevance order; the website links visitors to Google for the complete/current review view. Review availability, order and freshness are determined by Google. Google attribution, reviewer profile links/photos, individual review source links and reporting links are retained. The Places API policy prohibits pre-fetching, caching or storing Places content beyond specific exceptions, so this implementation does not cache review content. Requesting the `reviews` field triggers the Place Details Enterprise + Atmosphere billing tier; check current Google Maps Platform pricing and set quotas/budget alerts before enabling it.
 
-Until the correct Place ID and secrets are configured and the function is deployed, the page shows a direct Google Maps search link rather than pretend reviews.
+Until the exact Place ID and secrets are available, the page shows a clear “Reviews connection pending” message and a direct link to the Google listing. No star rating, review count, testimonial or review card is invented. This does not block the website launch. You can send the public listing link now; we can connect the API later once the exact Place ID is identified.
 
-## 4. Deploy
+## 4. Preview and production deployment
 
-If this GitHub repository is connected to your existing Vercel project, Vercel should create a preview deployment for the branch or pull request. Review that preview first. After you approve the changes, merge the pull request to `main` to trigger the production deployment. Add and verify a custom domain in Vercel when ready; then update the canonical URL, Open Graph URL, JSON-LD URL, robots sitemap URL and sitemap location to that domain.
+The current redesign is intentionally kept on `redesign/business-intro-catalogue` in pull request #1. Vercel creates a preview for this branch. Review that preview and test the mobile layout, navigation, catalogue filters, contact links and (after setup) admin login. **Do not merge this pull request until you explicitly decide to publish.** The production website remains unchanged while the PR is open.
+
+When you later approve a production launch, merge the PR to `main` yourself. Add and verify a custom domain in Vercel when ready; then update the canonical URL, Open Graph URL, JSON-LD URL, robots sitemap URL and sitemap location to that domain.
 
 ## 5. Search indexing checklist
 
