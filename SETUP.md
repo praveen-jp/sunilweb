@@ -62,7 +62,7 @@ The website does not contain fabricated testimonials. The Edge Function at `supa
    supabase functions deploy google-reviews
    ```
 
-The API key and Place ID are Edge Function secrets; they are not exposed in website JavaScript. The function returns the available review data, rating, review count and Google Maps URL. Google Places API Place Details returns a limited set (up to five) of reviews; the website links visitors to Google for the full/current review view. Review availability, order and freshness are determined by Google. Google attribution and author links are retained.
+The API key and Place ID are Edge Function secrets; they are not exposed in website JavaScript. The function returns the available review data, rating, review count and Google Maps URL. Google Places API Place Details returns a limited set (up to five) of reviews in relevance order; the website links visitors to Google for the complete/current review view. Review availability, order and freshness are determined by Google. Google attribution, reviewer profile links/photos, individual review source links and reporting links are retained. The Places API policy prohibits pre-fetching, caching or storing Places content beyond specific exceptions, so this implementation does not cache review content. Requesting the `reviews` field triggers the Place Details Enterprise + Atmosphere billing tier; check current Google Maps Platform pricing and set quotas/budget alerts before enabling it.
 
 Until the correct Place ID and secrets are configured and the function is deployed, the page shows a direct Google Maps search link rather than pretend reviews.
 
