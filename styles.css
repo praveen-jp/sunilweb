@@ -137,3 +137,9 @@ body{font-size:16px;line-height:1.7}
 .site-header .brand-mark{background:transparent!important;border:0;border-radius:0;overflow:visible}
 .site-header .brand-mark img{width:39px;height:39px;object-fit:contain}
 @media(max-width:680px){.site-header .brand-mark img{width:34px;height:34px}}
+
+
+/* Footer uses the same standalone S mark, without a coloured tile. */
+.site-footer .footer-brand .brand-mark{background:transparent!important;color:inherit;border:0;border-radius:0;overflow:visible}
+.site-footer .footer-brand .brand-mark img{width:39px;height:39px;object-fit:contain}
+@media(max-width:680px){.site-footer .footer-brand .brand-mark img{width:34px;height:34px}}
