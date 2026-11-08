@@ -15,3 +15,38 @@
 @media(max-width:680px){html{scroll-padding-top:70px}.site-header{height:70px}.nav-wrap{padding:0 20px}.brand-mark{width:34px;height:34px}.brand-name{font-size:12px}.menu-toggle{display:block;cursor:pointer}.site-nav{display:none;position:absolute;top:70px;left:0;right:0;background:var(--paper);padding:18px 22px 24px;border-bottom:1px solid var(--line);flex-direction:column;align-items:stretch;gap:0}.site-nav.open{display:flex}.site-nav>a:not(.nav-call){padding:12px 0;border-bottom:1px solid var(--line)}.nav-call{margin-top:14px;text-align:center}.hero{padding:53px 22px 48px;grid-template-columns:1fr;gap:32px}.hero h1{font-size:clamp(48px,12.5vw,66px)}.hero-intro{font-size:14px}.hero-note{margin-top:38px}.hero-visual{padding-right:12px}.hero-image{height:330px}.image-caption{right:12px}.hero-stamp{width:92px;height:92px;right:-1px;top:22px}.hero-stamp strong{font-size:13px}.intro-strip{padding:19px 18px}.intro-strip>div{font-size:11px;line-height:1.9}.section-shell{padding:72px 22px}.about-grid{grid-template-columns:1fr;gap:23px;padding:36px 0}.about h2,.section-heading-row h2,.review-layout h2,.contact-heading h2{font-size:42px}.about-photo-row{grid-template-columns:1fr 1fr;gap:16px}.about-photo-row figure:last-child{display:none}.about-photo-row img{height:160px}.about-photo-note{padding:3px}.products-section .section-shell{padding-top:70px;padding-bottom:73px}.section-heading-row,.contact-heading{display:block;padding:37px 0 25px}.section-heading-row>p,.contact-heading>p{margin-top:16px}.product-tools{display:block}.filter-list{gap:4px}.filter-button{padding:8px 10px}.catalogue-note{margin-top:12px}.product-grid{grid-template-columns:1fr 1fr;gap:28px 13px;padding-top:22px}.product-card h3{font-size:16px}.product-card>p{font-size:11px;min-height:65px}.product-meta{font-size:7px;letter-spacing:.08em}.product-contact{font-size:10px}.review-layout{grid-template-columns:1fr;gap:32px}.review-layout h2{margin-top:32px}.google-panel{padding:21px 17px}.google-footer{font-size:8px}.contact-grid{grid-template-columns:1fr;gap:28px}.map-frame,.map-frame iframe{min-height:295px}.site-footer{padding:39px 22px 18px}.footer-main{grid-template-columns:1fr;gap:20px}.footer-links{gap:18px}.footer-bottom{font-size:8px}.floating-whatsapp{right:15px;bottom:15px}}
 @media(max-width:390px){.product-grid{grid-template-columns:1fr}.product-card>p{min-height:0}.product-image{aspect-ratio:1.35/1}.hero-image{height:285px}.image-caption{font-size:7px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{transition:none!important;animation:none!important}.reveal{opacity:1;transform:none}}
+
+
+/* Contrast pass: stronger text hierarchy on light surfaces and mobile screens. */
+:root{--muted:#4b5d69;--ink-soft:#344b5e}
+.brand-name small,.eyebrow,.section-kicker,.hero-note,.image-caption,.about-photo-row figcaption,.about-photo-note p,.catalogue-note,.contact-label{color:#465866}
+.hero-intro,.about-copy p,.section-heading-row>p,.contact-heading>p,.contact-item p{color:#354957}
+.intro-strip>p{color:#465866}
+.section-kicker span{color:#526574}
+.product-meta{color:#4c5e6b}
+.product-card>p{color:#3d505e}
+.catalogue-footnote{color:#3d505e}
+.filter-button{color:#344b5e}
+.image-placeholder{color:#344f5d}
+.contact-label{font-weight:800}
+.reviews-section .section-kicker{color:#d3dfe5}
+.reviews-section .section-kicker span{color:#c0cdd5}
+.review-intro{color:#e0e8ed}
+.review-placeholder{color:#435461}
+.google-heading small,.google-footer{color:#53616b}
+.review-time,.review-order-note,.review-policy-note{color:#53616b}
+.review-source,.review-report{color:#344b5e}
+.review-text{color:#34434e}
+.google-rating-summary small{color:#53616b}
+.site-footer .footer-main>p{color:#d1dce3}
+.site-footer .footer-links a,.site-footer .footer-phone{color:#e1e9ee}
+.site-footer .footer-bottom{color:#c0ccd4}
+.site-footer .footer-brand .brand-name small{color:#c0ccd4}
+@media(max-width:680px){
+  .eyebrow,.section-kicker,.hero-note,.image-caption,.about-photo-row figcaption,.contact-label{font-size:10px}
+  .product-meta{font-size:8px}
+  .catalogue-note{font-size:10px;white-space:normal}
+  .footer-bottom{font-size:9px}
+  .site-footer .footer-main>p{font-size:12px}
+  .google-footer{font-size:9px}
+}
