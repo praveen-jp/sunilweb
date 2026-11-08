@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en-IN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="theme-color" content="#172b43">
+  <title>Catalogue Admin | Sunil Stickering &amp; Digitals</title>
+  <link rel="icon" href="favicon.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body class="admin-body">
+  <header class="admin-header">
+    <a class="admin-brand" href="index.html"><span class="brand-mark">S</span><span><strong>SUNIL</strong><small>STICKERING &amp; DIGITALS</small></span></a>
+    <a href="index.html" class="back-link">View website ↗</a>
+  </header>
+  <main class="admin-main">
+    <section class="login-panel" id="login-panel">
+      <p class="admin-eyebrow">PRIVATE AREA</p>
+      <h1>Catalogue admin</h1>
+      <p class="muted">Sign in with an authorised administrator account to manage website products.</p>
+      <form id="login-form" class="admin-form">
+        <label>Email address<input type="email" name="email" autocomplete="username" required></label>
+        <label>Password<input type="password" name="password" autocomplete="current-password" required></label>
+        <button class="admin-button" type="submit">Sign in</button>
+        <p class="status" id="login-status" role="status" aria-live="polite"></p>
+      </form>
+      <p class="login-help">Access is restricted. Admin accounts must be approved in Supabase; public sign-up is disabled.</p>
+    </section>
+
+    <section class="dashboard" id="dashboard" hidden>
+      <div class="dashboard-heading"><div><p class="admin-eyebrow">PRODUCT CATALOGUE</p><h1>Manage products</h1><p class="muted">Add, edit, publish, hide or remove products. No prices are collected or displayed.</p></div><button class="quiet-button" id="sign-out" type="button">Sign out</button></div>
+      <div class="dashboard-grid">
+        <section class="admin-card">
+          <div class="card-heading"><div><p class="admin-eyebrow">PRODUCT DETAILS</p><h2 id="product-form-title">Add a product</h2></div><button class="quiet-button" id="reset-form" type="button">Clear</button></div>
+          <form id="product-form" class="admin-form">
+            <input type="hidden" name="id">
+            <label>Product name<input name="name" type="text" maxlength="90" required placeholder="e.g. Custom Acrylic Name Plate"></label>
+            <label>Category<select name="category_id" id="category-select"><option value="">Choose a category</option></select></label>
+            <label>Description<textarea name="description" rows="4" maxlength="350" required placeholder="Briefly describe the product and possible customisation."></textarea></label>
+            <label>Product photograph<input name="image" type="file" accept="image/jpeg,image/png,image/webp"><small>JPG, PNG or WebP. Maximum 5 MB. Upload actual product photographs.</small></label>
+            <label>Image description (alt text)<input name="alt_text" type="text" maxlength="140" placeholder="Describe what is visible in the photograph"></label>
+            <label class="check-label"><input name="is_active" type="checkbox" checked> Show this product on the public website</label>
+            <div class="form-actions"><button class="admin-button" type="submit" id="save-product">Save product</button><span class="status" id="product-status" role="status" aria-live="polite"></span></div>
+          </form>
+        </section>
+
+        <section class="admin-card category-card">
+          <p class="admin-eyebrow">ORGANISE THE CATALOGUE</p><h2>Product categories</h2>
+          <form id="category-form" class="category-form">
+            <label class="sr-only" for="new-category">New category name</label>
+            <input id="new-category" name="name" type="text" maxlength="50" placeholder="e.g. Acrylic Gifts" required>
+            <button class="admin-button secondary-button" type="submit">Add category</button>
+          </form>
+          <p class="status" id="category-status" role="status" aria-live="polite"></p>
+          <div class="category-list" id="category-list"></div>
+          <p class="fine-print">Categories can be created as needed. Products can be assigned to a category when added or edited.</p>
+        </section>
+      </div>
+
+      <section class="admin-card inventory-card">
+        <div class="card-heading"><div><p class="admin-eyebrow">LIVE CATALOGUE CONTENT</p><h2>All products <span class="count" id="product-count">0</span></h2></div><button class="quiet-button" id="refresh-products" type="button">Refresh list ↻</button></div>
+        <div id="product-list" class="product-list"><p class="muted">Loading products…</p></div>
+      </section>
+    </section>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="admin.js" defer></script>
+</body>
+</html>
