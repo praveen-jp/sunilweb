@@ -99,10 +99,15 @@ async function loadCatalogue(client) {
   }
 }
 
-function renderGoogleReviews(reviews) {
+function renderGoogleReviews(payload) {
   const target = document.getElementById("google-reviews");
-  if (!target || !Array.isArray(reviews) || !reviews.length) return;
-  target.innerHTML = '<div class="review-list">' + reviews.map((review) => {
+  if (!target || !Array.isArray(payload?.reviews) || !payload.reviews.length) return;
+  const ratingSummary = payload.rating != null
+    ? `<div class="google-rating-summary"><strong>${Number(payload.rating).toFixed(1)}</strong><span aria-label="Google rating">${"★".repeat(Math.round(Number(payload.rating)))}</span><small>${Number(payload.userRatingCount || 0).toLocaleString("en-IN")} Google ratings</small></div>`
+    : "";
+  const source = document.querySelector("[data-google-source]");
+  if (source && payload.googleMapsUri) source.href = payload.googleMapsUri;
+  target.innerHTML = ratingSummary + '<div class="review-list">' + payload.reviews.map((review) => {
     const rating = Math.max(0, Math.min(5, Number(review.rating) || 0));
     const stars = "★".repeat(Math.round(rating)) + "☆".repeat(5 - Math.round(rating));
     const author = escapeHtml(review.authorAttribution?.displayName || review.author_name || "Google reviewer");
@@ -122,7 +127,7 @@ async function loadGoogleReviews(client) {
   try {
     const { data, error } = await client.functions.invoke("google-reviews");
     if (error) throw error;
-    if (data?.reviews?.length) renderGoogleReviews(data.reviews);
+    if (data?.reviews?.length) renderGoogleReviews(data);
     else if (target && data?.message) target.innerHTML = '<p class="review-placeholder">' + escapeHtml(data.message) + '</p>';
   } catch (error) {
     console.info("Google reviews are not configured yet. The live Google profile link remains available.", error?.message || error);
