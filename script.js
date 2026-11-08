@@ -107,6 +107,10 @@ function renderGoogleReviews(payload) {
     : "";
   const source = document.querySelector("[data-google-source]");
   if (source && payload.googleMapsUri) source.href = payload.googleMapsUri;
+  const providerAttributions = Array.isArray(payload.attributions) ? payload.attributions.map((item) => {
+    const label = escapeHtml(item.provider || item.text || "");
+    return item.providerUri ? `<a href="${escapeHtml(item.providerUri)}" target="_blank" rel="noopener">${label}</a>` : label;
+  }).filter(Boolean).join(" · ") : "";
   target.innerHTML = ratingSummary + '<div class="review-list">' + payload.reviews.map((review) => {
     const rating = Math.max(0, Math.min(5, Number(review.rating) || 0));
     const stars = "★".repeat(Math.round(rating)) + "☆".repeat(5 - Math.round(rating));
@@ -114,11 +118,16 @@ function renderGoogleReviews(payload) {
     const text = escapeHtml(review.text?.text || review.text || "");
     const time = escapeHtml(review.relativePublishTimeDescription || "");
     const authorUri = review.authorAttribution?.uri;
+    const photoUri = review.authorAttribution?.photoUri;
     const authorLabel = authorUri
       ? `<a class="review-author" href="${escapeHtml(authorUri)}" target="_blank" rel="noopener">${author}</a>`
       : `<span class="review-author">${author}</span>`;
-    return `<article class="review-item"><div class="review-top">${authorLabel}<span class="review-stars" aria-label="${rating} out of 5 stars">${stars}</span></div><div class="review-time">${time}</div><p class="review-text">${text || "This customer left a Google rating."}</p></article>`;
-  }).join("") + "</div>";
+    const avatar = photoUri ? `<img class="review-avatar" src="${escapeHtml(photoUri)}" alt="" loading="lazy">` : "";
+    const reviewSource = review.googleMapsUri || payload.googleMapsUri;
+    const sourceLink = reviewSource ? `<a class="review-source" href="${escapeHtml(reviewSource)}" target="_blank" rel="noopener">View on Google Maps ↗</a>` : "";
+    const reportLink = review.flagContentUri ? `<a class="review-report" href="${escapeHtml(review.flagContentUri)}" target="_blank" rel="noopener">Report</a>` : "";
+    return `<article class="review-item"><div class="review-top"><div class="review-byline">${avatar}${authorLabel}</div><span class="review-stars" aria-label="${rating} out of 5 stars">${stars}</span></div><div class="review-time">${time}</div><p class="review-text">${text || "This customer left a Google rating."}</p><div class="review-actions">${sourceLink}${reportLink}</div></article>`;
+  }).join("") + `</div><p class="review-order-note">Reviews are shown in Google’s relevance order. Places API returns up to five reviews.${providerAttributions ? " " + providerAttributions : ""}</p><p class="review-policy-note">Google reviews are user-submitted. <a href="https://policies.google.com/terms" target="_blank" rel="noopener">Google Terms</a>.</p>`;
 }
 
 async function loadGoogleReviews(client) {
