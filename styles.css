@@ -122,3 +122,12 @@ body{font-size:16px;line-height:1.7}
 .floating-whatsapp svg{width:27px;height:27px;display:block}
 @media(max-width:900px){.footer-main{grid-template-columns:1fr 1fr}.footer-socials{grid-column:1/-1}}
 @media(max-width:680px){.brand-mark img,.footer-brand .brand-mark img{width:26px;height:26px}.footer-socials{grid-column:auto}.floating-whatsapp{width:54px;height:54px}}
+
+
+/* Recognisable social brand marks: clear official brand colours with white glyphs. */
+.footer-socials .social-icon{border:0;color:#fff;opacity:1;box-shadow:0 2px 8px #0002}
+.footer-socials .social-icon.instagram{background:linear-gradient(135deg,#833ab4 0%,#c13584 42%,#e1306c 68%,#f77737 100%);color:#fff}
+.footer-socials .social-icon.facebook{background:#1877f2;color:#fff}
+.footer-socials .social-icon.youtube{background:#ff0033;color:#fff}
+.footer-socials .social-icon.whatsapp{background:#25d366;color:#fff}
+.footer-socials .social-icon:hover{filter:brightness(1.08);transform:translateY(-2px)}
