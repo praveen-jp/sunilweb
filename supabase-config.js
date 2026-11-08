@@ -4,6 +4,6 @@
  * The anon key is intended for browsers. Never put a service_role key here.
  */
 window.SUNIL_SUPABASE_CONFIG = {
-  url: "https://YOUR_PROJECT_REF.supabase.co",
-  anonKey: "YOUR_SUPABASE_ANON_KEY"
+  url: "https://oghpmyqbxpxtayhgfcis.supabase.co",
+  anonKey: "sb_publishable_buE9Qqzg08mUngyK-XyhQg_MArPVmGM"
 };
