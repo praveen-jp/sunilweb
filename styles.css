@@ -50,3 +50,57 @@
   .site-footer .footer-main>p{font-size:12px}
   .google-footer{font-size:9px}
 }
+
+
+/* Final readability pass: comfortable body copy sizing and stronger text contrast. */
+body{font-size:16px;line-height:1.7}
+.hero-intro{font-size:16px;line-height:1.8;color:#263746}
+.about-copy p{font-size:16px;line-height:1.85;color:#263746}
+.section-heading-row>p,.contact-heading>p{font-size:15px;line-height:1.8;color:#263746}
+.product-card>p{font-size:14px;line-height:1.75;color:#263746}
+.catalogue-footnote{font-size:14px;line-height:1.7;color:#263746}
+.contact-item p{font-size:14px;line-height:1.8;color:#263746}
+.contact-item>a:not(.underlined-link){font-size:16px}
+.review-intro{font-size:15px;line-height:1.85;color:#edf2f5}
+.review-placeholder{font-size:14px;line-height:1.8;color:#263746}
+.review-text{font-size:13px;line-height:1.75;color:#263746}
+.review-time,.review-order-note,.review-policy-note{font-size:11px;line-height:1.65;color:#43515b}
+.review-source,.review-report{font-size:11px;color:#263746}
+.google-heading small{font-size:12px;color:#43515b}
+.google-footer{font-size:11px;color:#43515b}
+.google-rating-summary small{font-size:11px;color:#43515b}
+.footer-main>p{font-size:13px;line-height:1.8;color:#e0e8ed}
+.footer-links a,.footer-phone{font-size:12px;color:#edf2f5}
+.footer-bottom{font-size:11px;color:#d0dbe2}
+.brand-name small{font-size:9px}
+.eyebrow,.section-kicker{font-size:11px}
+.section-kicker span{font-size:10px;color:#526574}
+.hero-note{font-size:11px;color:#465866}
+.image-caption{font-size:10px;color:#465866}
+.about-photo-row figcaption{font-size:10px;color:#465866}
+.about-photo-note p{font-size:13px;line-height:1.75;color:#344b5e}
+.product-meta{font-size:10px;color:#344b5e}
+.catalogue-note{font-size:11px;color:#344b5e}
+.filter-button{font-size:12px;color:#263746}
+.text-link,.underlined-link{font-size:13px}
+.button{font-size:13px}
+.site-nav>a:not(.nav-call),.nav-call{font-size:13px}
+.contact-label{font-size:10px;color:#344b5e}
+@media(max-width:680px){
+  body{font-size:16px;line-height:1.7}
+  .hero-intro{font-size:16px;line-height:1.8}
+  .about-copy p,.section-heading-row>p,.contact-heading>p{font-size:15px;line-height:1.8}
+  .product-card>p{font-size:14px;line-height:1.7;min-height:0}
+  .contact-item p{font-size:14px}
+  .review-intro{font-size:15px}
+  .review-placeholder{font-size:14px}
+  .review-text{font-size:13px}
+  .product-meta{font-size:10px}
+  .catalogue-note{font-size:11px}
+  .filter-button{font-size:12px}
+  .footer-main>p{font-size:13px}
+  .footer-links a,.footer-phone{font-size:12px}
+  .footer-bottom{font-size:11px}
+  .google-footer{font-size:11px}
+  .eyebrow,.section-kicker,.contact-label{font-size:10px}
+}
