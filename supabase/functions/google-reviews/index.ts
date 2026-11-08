@@ -52,7 +52,7 @@ serve(async (request: Request) => {
       reviews: (place.reviews || []).slice(0, 5),
     }), {
       status: 200,
-      headers: { ...corsHeaders, "Content-Type": "application/json", "Cache-Control": "public, max-age=900" },
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (error) {
     console.error("Google reviews function failed", error);
