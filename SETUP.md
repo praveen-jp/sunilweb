@@ -68,7 +68,7 @@ Until the correct Place ID and secrets are configured and the function is deploy
 
 ## 4. Deploy
 
-The repository is connected to Vercel (if the existing project integration remains active). Review the branch preview first, then merge the pull request to `main) to trigger production deployment. Add and verify a custom domain in Vercel when ready; then update the canonical URL, Open Graph URL, JSON-LD URL, robots sitemap URL and sitemap location to that domain.
+If this GitHub repository is connected to your existing Vercel project, Vercel should create a preview deployment for the branch or pull request. Review that preview first. After you approve the changes, merge the pull request to `main` to trigger the production deployment. Add and verify a custom domain in Vercel when ready; then update the canonical URL, Open Graph URL, JSON-LD URL, robots sitemap URL and sitemap location to that domain.
 
 ## 5. Search indexing checklist
 
