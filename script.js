@@ -48,6 +48,24 @@ function setupNavigation() {
   }));
 }
 
+function setupRevealMotion() {
+  const items = document.querySelectorAll(".reveal");
+  if (!items.length) return;
+  if (!("IntersectionObserver" in window) || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    items.forEach((item) => item.classList.add("is-visible"));
+    return;
+  }
+  const observer = new IntersectionObserver((entries, obs) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("is-visible");
+        obs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: "0px 0px -35px 0px" });
+  items.forEach((item) => observer.observe(item));
+}
+
 function setupFilters() {
   const container = document.getElementById("category-filters");
   if (!container) return;
@@ -146,6 +164,7 @@ async function loadGoogleReviews(client) {
 document.addEventListener("DOMContentLoaded", async () => {
   document.getElementById("year")?.replaceChildren(String(new Date().getFullYear()));
   setupNavigation();
+  setupRevealMotion();
   setupFilters();
   const client = supabaseClient();
   await Promise.all([loadCatalogue(client), loadGoogleReviews(client)]);
